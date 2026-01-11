@@ -1,24 +1,20 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI;
+const globalAny = global;
 
-if (!MONGODB_URI) {
-  throw new Error("MONGODB_URI not found");
-}
-
-let cached = global.mongoose;
-
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
-}
+// Use a global variable to prevent multiple connections in development
+let isConnected = globalAny.mongoose?.isConnected || false;
 
 export async function connectDB() {
-  if (cached.conn) return cached.conn;
+  if (isConnected) return;
 
-  if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGODB_URI);
+  if (!process.env.MONGODB_URI) {
+    throw new Error("❌ MONGODB_URI not defined");
   }
 
-  cached.conn = await cached.promise;
-  return cached.conn;
+  const db = await mongoose.connect(process.env.MONGODB_URI);
+  isConnected = db.connections[0].readyState;
+  globalAny.mongoose = { isConnected };
+
+  console.log("✅ MongoDB connected to", process.env.MONGODB_URI);
 }
