@@ -1,19 +1,36 @@
-"use client";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-import { useEffect, useState } from "react";
+export default async function DashboardPage() {
+  const cookieStore = await cookies(); //  IMPORTANT
+  const token = cookieStore.get("token");
 
-export default function DashboardClient() {
-  const [token, setToken] = useState(null);
+  if (!token) {
+    redirect("/login");
+  }
 
-  useEffect(() => {
-    const tokenValue = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("token="))
-      ?.split("=")[1];
-    setToken(tokenValue);
-  }, []);
+  return (
+    <div style={{ padding: "30px" }}>
+      
 
-  if (token) return <p>Redirecting...</p>; //!token 
+      <div style={{ marginTop: "20px" }}>
+        <h2>Skill Assessment</h2>
+        <p>Start MCQ based skill test</p>
 
-  return <h1>Welcome to your dashboard!</h1>;
+        <a href="/assessment">
+          <button
+            style={{
+              padding: "10px 20px",
+              backgroundColor: "#2563eb",
+              color: "white",
+              border: "none",
+              cursor: "pointer",
+            }}
+          >
+            Start MCQ Test
+          </button>
+        </a>
+      </div>
+    </div>
+  );
 }

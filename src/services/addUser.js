@@ -11,7 +11,7 @@ export async function addUser(data) {
     console.log("User saved:", newUser);
     return newUser;
   } catch (err) {
-    console.error(" Error saving user:", err); // जर काही चूक झाली तर console मध्ये दाखवा
+    console.error(" Error saving user:", err); 
     throw err; // वर पाठवा, Signup function ला कळायला
   }
 }

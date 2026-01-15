@@ -32,7 +32,7 @@ export default function LoginPage() {
     setIsPending(true);
     setErrors({});
 
-    try {
+    try { 
       const res = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -40,7 +40,7 @@ export default function LoginPage() {
       });
 
       if (res.ok) {
-        router.push("/dashboard"); // ✅ client-side redirect
+        router.push("/dashboard"); // client-side redirect
       } else {
         const data = await res.json();
         setErrors({ form: data.error || "Login failed" });
